@@ -27,6 +27,8 @@ class Game {
 
     initialize(size = 4) {
         this.ele.innerHTML = '';
+        this.ele.style.width = `${size*100}px`;
+        this.ele.style.height = `${size*100}px`;
         document.removeEventListener('keydown', this.keyDownEvent);
         this.map = new Array(size).fill(0).map(() => new Array(size).fill(null));
         this.rows = [];
@@ -51,8 +53,8 @@ class Game {
             type: 'number',
             placeholder: 'Default Size = 4'
         }).then(size => {
-            if (!(size >= 2 && size <= 6)) {
-                Alert.showMessage('Size must be between 2 and 6.')
+            if (!(size >= 2 && size <= 10)) {
+                Alert.showMessage('Size must be between 2 and 10.')
                     .then(() => {
                         game.start();
                     });
