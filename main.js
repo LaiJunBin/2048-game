@@ -53,7 +53,7 @@ class Game {
                     if (Math.abs(x) > Math.abs(y)) {
                         // left or right
                         if (Math.abs(x) >= 10) {
-                            if (Math.sign(x))
+                            if (Math.sign(x) == 1)
                                 this.right();
                             else
                                 this.left();
@@ -61,7 +61,7 @@ class Game {
                     } else {
                         // top or down
                         if (Math.abs(y) >= 10) {
-                            if (Math.sign(y))
+                            if (Math.sign(y) == 1)
                                 this.down();
                             else
                                 this.top();
