@@ -127,8 +127,6 @@ class Game {
             e.keyCode == 38 ? this.top() :
             e.keyCode == 39 ? this.right() :
             e.keyCode == 40 ? this.down() : null;
-
-        Row.updateRows(this.rows, this.map);
     }
 
     top() {
