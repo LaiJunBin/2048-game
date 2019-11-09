@@ -15,17 +15,25 @@ class Row {
 class Game {
 
     constructor(options = {}) {
+        this.score = 0;
         this.colData = options.colData || [2, 4];
         let colDataWeight = options.colDataWeight || [2, 1];
         this.colDataWeight = [colDataWeight[0]];
         for (let i = 1; i < colDataWeight.length; i++)
             this.colDataWeight[i] = colDataWeight[i] + colDataWeight[i - 1];
 
+        this.game = document.createElement('div');
+        this.game.classList.add('game');
+
+        this.header = document.createElement('header');
         this.ele = document.createElement('div');
-        document.body.appendChild(this.ele);
+        this.game.appendChild(this.header);
+        this.game.appendChild(this.ele);
+        document.body.appendChild(this.game);
     }
 
     initialize(size = 4) {
+        this.score = 0;
         this.ele.innerHTML = '';
         this.ele.style.width = `${size*100}px`;
         this.ele.style.height = `${size*100}px`;
@@ -56,7 +64,7 @@ class Game {
             if (!(size >= 2 && size <= 10)) {
                 Alert.showMessage('Size must be between 2 and 10.')
                     .then(() => {
-                        game.start();
+                        this.start();
                     });
                 return;
             }
@@ -102,7 +110,7 @@ class Game {
         } = this.getMapRandomNullPosition();
         this.map[i][j] = this.getNextData();
         Row.updateRows(this.rows, this.map);
-
+        this.header.innerHTML = `Score: ${this.score}`;
         if (!this.hasNext())
             return this.gameOver();
     }
@@ -135,6 +143,7 @@ class Game {
                 }
 
                 if (j > 0 && this.map[j][i] !== null && this.map[j][i] === this.map[j - 1][i]) {
+                    this.score += this.map[j][i] * 2;
                     this.map[j - 1][i] = this.map[j][i] * 2;
                     this.map[j][i] = null;
                     validOperation = true;
@@ -157,6 +166,7 @@ class Game {
                 }
 
                 if (j < this.map.length - 1 && this.map[j][i] !== null && this.map[j][i] === this.map[j + 1][i]) {
+                    this.score += this.map[j][i] * 2;
                     this.map[j + 1][i] = this.map[j][i] * 2;
                     this.map[j][i] = null;
                     validOperation = true;
@@ -179,6 +189,7 @@ class Game {
                 }
 
                 if (this.map[i][j] !== null && this.map[i][j] === this.map[i][j - 1]) {
+                    this.score += this.map[i][j] * 2;
                     this.map[i][j - 1] = this.map[i][j] * 2;
                     this.map[i][j] = null;
                     validOperation = true;
@@ -201,6 +212,7 @@ class Game {
                 }
 
                 if (this.map[i][j] !== null && this.map[i][j] === this.map[i][j + 1]) {
+                    this.score += this.map[i][j] * 2;
                     this.map[i][j + 1] = this.map[i][j] * 2;
                     this.map[i][j] = null;
                     validOperation = true;
@@ -242,7 +254,7 @@ class Game {
             textAlign: 'center',
             buttonText: 'Restart'
         }).then(() => {
-            game.start();
+            this.start();
         })
     }
 }
