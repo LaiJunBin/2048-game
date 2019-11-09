@@ -282,11 +282,13 @@ class Alert {
         alert.style.minHeight = '100px';
         alert.style.fontSize = '20px';
         alert.style.textAlign = 'center';
+        alert.style.position = 'fixed';
 
         let header = document.createElement('div');
         header.style.background = '#39f6';
         header.style.padding = '10px';
         header.style.marginBottom = '5px';
+        header.style.cursor = 'grab';
         header.innerText = options.headerText || 'Message';
 
         let msg = document.createElement('div');
@@ -329,6 +331,27 @@ class Alert {
         });
 
         document.addEventListener('keydown', globalEnterEvent)
+
+        header.addEventListener('mousedown', function (e) {
+            header.style.cursor = 'grabbing';
+            var {
+                offsetX,
+                offsetY
+            } = e;
+            var mousemoveEvent = function (e) {
+                let {
+                    clientX,
+                    clientY
+                } = e;
+                alert.style.left = `${clientX-offsetX}px`;
+                alert.style.top = `${clientY-offsetY}px`;
+            }
+            document.addEventListener('mousemove', mousemoveEvent);
+            document.addEventListener('mouseup', function () {
+                header.style.cursor = 'grab';
+                document.removeEventListener('mousemove', mousemoveEvent);
+            });
+        });
 
         alert.appendChild(header);
         alert.appendChild(msg);
