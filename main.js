@@ -15,6 +15,7 @@ class Row {
 class Game {
 
     constructor(options = {}) {
+        this.status = false;
         this.score = 0;
         this.colData = options.colData || [2, 4];
         let colDataWeight = options.colDataWeight || [2, 1];
@@ -30,6 +31,7 @@ class Game {
         this.game.appendChild(this.header);
         this.game.appendChild(this.ele);
         document.body.appendChild(this.game);
+        document.addEventListener('keydown', this.keyDownEvent.bind(this));
     }
 
     initialize(size = 4) {
@@ -37,7 +39,6 @@ class Game {
         this.ele.innerHTML = '';
         this.ele.style.width = `${size*100}px`;
         this.ele.style.height = `${size*100}px`;
-        document.removeEventListener('keydown', this.keyDownEvent);
         this.map = new Array(size).fill(0).map(() => new Array(size).fill(null));
         this.rows = [];
 
@@ -54,6 +55,7 @@ class Game {
         }
 
         Row.updateRows(this.rows, this.map);
+        this.status = true;
     }
 
     start() {
@@ -70,7 +72,6 @@ class Game {
             }
 
             this.initialize(size);
-            document.addEventListener('keydown', (e) => this.keyDownEvent(e));
             this.nextPosition = this.getMapRandomNullPosition();
             this.next();
         })
@@ -123,10 +124,12 @@ class Game {
     }
 
     keyDownEvent(e) {
-        e.keyCode == 37 ? this.left() :
-            e.keyCode == 38 ? this.top() :
-            e.keyCode == 39 ? this.right() :
-            e.keyCode == 40 ? this.down() : null;
+        if (this.status) {
+            e.keyCode == 37 ? this.left() :
+                e.keyCode == 38 ? this.top() :
+                e.keyCode == 39 ? this.right() :
+                e.keyCode == 40 ? this.down() : null;
+        }
     }
 
     top() {
