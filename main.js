@@ -32,6 +32,49 @@ class Game {
         this.game.appendChild(this.ele);
         document.body.appendChild(this.game);
         document.addEventListener('keydown', this.keyDownEvent.bind(this));
+
+        document.addEventListener('touchstart', e => {
+            if (this.status) {
+
+                var {
+                    clientX: startX,
+                    clientY: startY
+                } = e.changedTouches[0];
+
+                var touchendEvent = e => {
+                    var {
+                        clientX: endX,
+                        clientY: endY
+                    } = e.changedTouches[0];
+
+                    var x = endX - startX;
+                    var y = endY - startY;
+
+                    if (Math.abs(x) > Math.abs(y)) {
+                        // left or right
+                        if (Math.abs(x) >= 10) {
+                            if (Math.sign(x))
+                                this.right();
+                            else
+                                this.left();
+                        }
+                    } else {
+                        // top or down
+                        if (Math.abs(y) >= 10) {
+                            if (Math.sign(y))
+                                this.down();
+                            else
+                                this.top();
+                        }
+                    }
+
+
+                    document.removeEventListener('touchend', touchendEvent);
+                }
+
+                document.addEventListener('touchend', touchendEvent);
+            }
+        })
     }
 
     initialize(size = 4) {
